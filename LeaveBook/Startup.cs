@@ -52,6 +52,9 @@ namespace LeaveBook
             //    // we can create seperate context for data and storeusers
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            // add user manager
+
+            // add role manager
 
         }
 
@@ -73,7 +76,6 @@ namespace LeaveBook
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -12,10 +12,13 @@ namespace LeaveBook.Helpers
     {
         private readonly ApplicationDbContext _ctx;
         private readonly UserManager<Employee> _userManager;
-        public SeedData(ApplicationDbContext context, UserManager<Employee> userManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public SeedData(ApplicationDbContext context, UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager)
         {
             _ctx = context;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
         public void SeedLeaveTypeData()
         {
@@ -63,28 +66,66 @@ namespace LeaveBook.Helpers
             var user = await _userManager.FindByEmailAsync("lionel.messi@treatdutch.com");
             if (user == null)
             {
-                user = new Employee()
+                List<Employee> employees = new List<Employee>
                 {
-                    // these two needs to be properly implemented in real scenerio...
-                    HashPassword = null,
-                    Key = null,
+                    new Employee
+                    {
+                        // these two needs to be properly implemented in real scenerio...
+                        HashPassword = null,
+                        Key = null,
 
-                    Email = "lionel.messi@leavebook.com",
-                    // username is required field so we need to pass the value for it
-                    // we use email as username for our app
-                    UserName = "lionel.messi@leavebook.com",
-                    NormalizedEmail = "LIONEL.MESSI@LEAVEBOOK.COM",
-                    NormalizedUserName = "LIONEL.MESSI@LEAVEBOOK.COM"
+                        Email = "lionel.messi@leavebook.com",
+                        // username is required field so we need to pass the value for it
+                        // we use email as username for our app
+                        UserName = "lionel.messi@leavebook.com",
+                        NormalizedEmail = "LIONEL.MESSI@LEAVEBOOK.COM",
+                        NormalizedUserName = "LIONEL.MESSI@LEAVEBOOK.COM"
+
+                    },
+                    new Employee
+                    {
+                        // these two needs to be properly implemented in real scenerio...
+                        HashPassword = null,
+                        Key = null,
+
+                        Email = "neymar.junior@leavebook.com",
+                        // username is required field so we need to pass the value for it
+                        // we use email as username for our app
+                        UserName = "neymar.junior@leavebook.com",
+                        NormalizedEmail = "NEYMAR.JUNIOR@LEAVEBOOK.COM",
+                        NormalizedUserName = "NEYMAR.JUNIOR@LEAVEBOOK.COM"
+                    }
 
                 };
 
+                // creating roles
+                var hrRole = new IdentityRole
+                {
+                    Name = "Hr",
+                    NormalizedName = "HR"
+                };
+                var staffRole = new IdentityRole
+                {
+                    Name = "Staff",
+                    NormalizedName = "STAFF"
+                };
+                await _roleManager.CreateAsync(hrRole);
+                await _roleManager.CreateAsync(staffRole);
+
                 // now we need to create this new user
                 // 2nd argument is the password for the user
-                var newUser = await _userManager.CreateAsync(user, "P@ssw0rd!");
-                if (newUser == null)
+                var hr = await _userManager.CreateAsync(employees[0], "P@ssw0rd!");
+                if (hr.Succeeded)
                 {
-                    throw new InvalidOperationException("cannot create new user in seeding...!");
+                    await _userManager.AddToRoleAsync(employees[0], hrRole.Name);
                 }
+
+                var staff = await _userManager.CreateAsync(employees[1], "P@ssw0rd!");
+                if (staff.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(employees[1], staffRole.Name);
+                }
+
             }
         }
     }

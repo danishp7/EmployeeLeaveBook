@@ -4,6 +4,7 @@ using System.Text;
 using LeaveBook.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using LeaveBook.ViewModels;
 
 namespace LeaveBook.Data
 {
@@ -14,7 +15,7 @@ namespace LeaveBook.Data
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<LeaveType> LeaveTypes { get; set; }
         public DbSet<LeaveAudit> LeaveAudits { get; set; }
-
+        
         // configure relations
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -57,5 +58,8 @@ namespace LeaveBook.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
         }
+        
+        // configure relations
+        public DbSet<LeaveBook.ViewModels.LeaveRequestViewModel> LeaveRequestViewModel { get; set; }
     }
 }

@@ -2,6 +2,8 @@
 {
     public enum Status
     {
-
+        Apply,
+        Processing,
+        Approved
     }
 }

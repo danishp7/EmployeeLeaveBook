@@ -5,6 +5,8 @@ namespace LeaveBook.ViewModels
 {
     public class LeaveRequestViewModel
     {
+        [key]
+        public int Id { get; set; }
         public string EmployeeId { get; set; }
         public string ApprovedById { get; set; }
         public int LeaveTypeId { get; set; }

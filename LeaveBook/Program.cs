@@ -39,9 +39,6 @@ namespace LeaveBook
                     // get the required parameters for the method
                     var _ctx = services.GetRequiredService<ApplicationDbContext>();
 
-                    // get user manager
-                    var _userManager = services.GetRequiredService<UserManager<Employee>>();
-
                     // add the migrations
                     _ctx.Database.Migrate();
 
