@@ -11,7 +11,7 @@ namespace LeaveBook.Repositories
     {
         private readonly ApplicationDbContext _ctx;
         private readonly ILogger<SharedRepository> _logger;
-        public SharedRepository(ApplicationDbContext context, ILogger<SharedRepository> logger)
+        public SharedRepository(ILogger<SharedRepository> logger, ApplicationDbContext context)
         {
             _ctx = context;
             _logger = logger;

@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LeaveBook.Helpers;
 using LeaveBook.Models;
+using LeaveBook.Repositories;
+using System.Reflection;
 
 namespace LeaveBook
 {
@@ -37,8 +39,14 @@ namespace LeaveBook
             services.AddControllersWithViews();
             services.AddRazorPages();
 
+            // add automapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             // register transient service for seeder. because it is only 1 time scoped
             services.AddTransient<SeedData>();
+
+            // add repositories
+            services.AddScoped<ISharedRepository, SharedRepository>();
+            services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 
             // add identity
             // to add the configuring identity
