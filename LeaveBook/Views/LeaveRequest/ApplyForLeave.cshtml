@@ -1,7 +1,8 @@
 ﻿@using LeaveBook.ViewModels;
-@model Tuple<LeaveRequestViewModel, List<LeaveTypeViewModel>>
+@model LeaveRequestViewModel
 
 @{
+    var lrModel = Model;
     ViewData["Title"] = "ApplyForLeave";
 }
 
@@ -14,33 +15,32 @@
         <form asp-action="ApplyForLeave">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Item2" class="control-label"></label>
-                <select asp-items="@(new SelectList(Model.Item2))"><option>Please Select Leave Type</option></select>
-                <span asp-validation-for="Item1.Reason" class="text-danger"></span>
+                <select asp-for="LeaveTypeId" asp-items="@(new SelectList(Model.LeaveTypes,"Id", "Name", "AllottedDays"))" class="form-control"></select>
+                <span asp-validation-for="Reason" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Item1.Reason" class="control-label"></label>
-                <input asp-for="Item1.Reason" class="form-control" />
-                <span asp-validation-for="Item1.Reason" class="text-danger"></span>
+                <label asp-for="Reason" class="control-label"></label>
+                <input asp-for="Reason" class="form-control" />
+                <span asp-validation-for="Reason" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Item1.AppliedDate" class="control-label"></label>
-                <input asp-for="Item1.AppliedDate" class="form-control" />
-                <span asp-validation-for="Item1.AppliedDate" class="text-danger"></span>
+                <label asp-for="AppliedDate" class="control-label"></label>
+                <input asp-for="AppliedDate" class="form-control" />
+                <span asp-validation-for="AppliedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Item1.StartDate" class="control-label"></label>
-                <input asp-for="Item1.StartDate" class="form-control" />
-                <span asp-validation-for="Item1.StartDate" class="text-danger"></span>
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Item1.EndDate" class="control-label"></label>
-                <input asp-for="Item1.EndDate" class="form-control" />
-                <span asp-validation-for="Item1.EndDate" class="text-danger"></span>
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
             </div>
         </form>
     </div>

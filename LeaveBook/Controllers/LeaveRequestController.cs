@@ -9,6 +9,7 @@ using LeaveBook.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
 namespace LeaveBook.Controllers
@@ -29,13 +30,13 @@ namespace LeaveBook.Controllers
         {
             LeaveRequestViewModel leaveRequestViewModel = new LeaveRequestViewModel();
             List<LeaveType> leaveTypes = await _leaveTypeRepo.GetAllLeaveTypes();
-            List<LeaveTypeViewModel> leaveTypeViewModels = _mapper.Map<List<LeaveType>, List<LeaveTypeViewModel>>(leaveTypes);
-            var model = new Tuple<LeaveRequestViewModel, List<LeaveTypeViewModel>>(leaveRequestViewModel, leaveTypeViewModels);
-            return View(model);
+            var leaveTypeViewModel = _mapper.Map<List<LeaveType>, List<LeaveTypesVM>>(leaveTypes);
+            leaveRequestViewModel.LeaveTypes = leaveTypeViewModel;
+            return View(leaveRequestViewModel);
         }
 
         [HttpPost]
-        public ActionResult ApplyForLeave(LeaveRequestViewModel model)
+        public ActionResult ApplyForLeave(LeaveRequestViewModel lrMmodel)
         {
             return RedirectToAction("Index", "Home");
         }
