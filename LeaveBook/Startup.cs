@@ -16,6 +16,8 @@ using LeaveBook.Helpers;
 using LeaveBook.Models;
 using LeaveBook.Repositories;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LeaveBook
 {
@@ -23,19 +25,19 @@ namespace LeaveBook
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _config = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration _config { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<Employee, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                    _config.GetConnectionString("DefaultConnection")));
+            //services.AddIdentity<Employee, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -47,22 +49,59 @@ namespace LeaveBook
             // add repositories
             services.AddScoped<ISharedRepository, SharedRepository>();
             services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
 
             // add identity
             // to add the configuring identity
             // 1st arg is the type of role
             // 2nd arg is the role
-            //services.AddIdentity<Employee, IdentityRole>(cfg =>
-            //{
-            //    cfg.User.RequireUniqueEmail = true;
-            //})
-            //    // we are telling that our storeuser is stored in our treatdutch context
-            //    // we can create seperate context for data and storeusers
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            // add user manager
+            // add identity
+            services.AddIdentity<Employee, IdentityRole>(cfg =>
+            {
+                // need to configure this
+                cfg.SignIn.RequireConfirmedAccount = false;
+                cfg.SignIn.RequireConfirmedEmail = false;
+                // need to configure this
 
-            // add role manager
+                cfg.User.RequireUniqueEmail = true;
+                cfg.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.0123456789-@";
+
+                cfg.Password = new PasswordOptions
+                {
+                    RequireDigit = true,
+                    RequiredLength = 5,
+                    RequiredUniqueChars = 1,
+                    RequireLowercase = true,
+                    RequireUppercase = true,
+                    RequireNonAlphanumeric = false
+                };
+                cfg.Lockout = new LockoutOptions
+                {
+                    DefaultLockoutTimeSpan = new TimeSpan(0, 0, 5, 0),
+                    MaxFailedAccessAttempts = 5
+                };
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+            // add authentication
+            // add authentication
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            //// decoding hash password compatibility
+            //services.Configure<PasswordHasherOptions>(options =>
+            //    options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV3
+            //);
 
         }
 

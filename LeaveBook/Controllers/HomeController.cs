@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using LeaveBook.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LeaveBook.Controllers
 {
@@ -18,10 +19,11 @@ namespace LeaveBook.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string logintoken)
         {
             return View();
         }
+
 
         public IActionResult Privacy()
         {

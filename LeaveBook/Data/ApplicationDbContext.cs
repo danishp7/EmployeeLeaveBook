@@ -61,5 +61,8 @@ namespace LeaveBook.Data
         
         // configure relations
         public DbSet<LeaveBook.ViewModels.LeaveRequestViewModel> LeaveRequestViewModel { get; set; }
+        
+        // configure relations
+        public DbSet<LeaveBook.ViewModels.EmployeeViewModel> EmployeeViewModel { get; set; }
     }
 }

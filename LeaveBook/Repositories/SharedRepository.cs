@@ -28,7 +28,6 @@ namespace LeaveBook.Repositories
                 _logger.LogError(ex.Message);
             }
         }
-
         public void Delete<T>(T entity) where T : class
         {
             try
@@ -41,7 +40,6 @@ namespace LeaveBook.Repositories
                 _logger.LogError(ex.Message);
             }
         }
-
         public async Task<bool> SaveAll()
         {
             try
