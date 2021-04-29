@@ -29,7 +29,7 @@ namespace LeaveBook.Repositories
                 _logger.LogWarning("no such employee exists...");
                 return null;
             }
-            var isPassword = VerifyPassword(password, employee.HashPassword, employee.Key);
+            var isPassword = IsPassword(password, employee.HashPassword, employee.Key);
             if (isPassword == false)
             {
                 _logger.LogWarning("password is incorrect...");
@@ -38,22 +38,7 @@ namespace LeaveBook.Repositories
             return employee;
         }
 
-        private bool VerifyPassword(string password, byte[] hashPassword, byte[] passwordSalt)
-        {
-            using(var hashedPasswordFromDb = new System.Security.Cryptography.HMACSHA512(passwordSalt))
-            {
-                var enteredPasswordHash = hashedPasswordFromDb.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-
-                for (int i = 0; i < enteredPasswordHash.Length; i++)
-                {
-                    if (hashPassword[i] != enteredPasswordHash[i])
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        public bool IsPassword(string password, byte[] passwordHash, byte[] passwordSalt)
+        public bool IsPassword(string password, byte[] hashPassword, byte[] passwordSalt)
         {
             using (var hashedPasswordFromDb = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
@@ -61,7 +46,7 @@ namespace LeaveBook.Repositories
 
                 for (int i = 0; i < enteredPasswordHash.Length; i++)
                 {
-                    if (passwordHash[i] != enteredPasswordHash[i])
+                    if (hashPassword[i] != enteredPasswordHash[i])
                         return false;
                 }
             }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace LeaveBook.Enums
 {
-    public enum Response 
+    public enum EmployerRole
     {
-        True = 1,
-        False = 0
+        Hr,
+        Staff
     }
 }
